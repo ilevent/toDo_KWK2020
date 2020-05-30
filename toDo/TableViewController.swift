@@ -21,10 +21,9 @@ class TableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
+//    override func numberOfSections(in tableView: UITableView) -> Int {
+//        return 0
+//    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return toDos.count
@@ -52,10 +51,29 @@ class TableViewController: UITableViewController {
           cell.textLabel?.text = toDo.name
         }
         return cell
-
-        // Configure the cell...
     }
+    
+   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     if let addVC = segue.destination as? AddToDoViewController {
+       addVC.previousVC = self
+     }
+    
+    if let completeVC = segue.destination as? CompleteToDoViewController {
+    if let toDo = sender as? ToDo {
+      completeVC.selectedToDo = toDo
+      completeVC.previousVC = self
+        }
+    }
+        
+   }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+      // this gives us a single ToDo
+      let toDo = toDos[indexPath.row]
+
+      performSegue(withIdentifier: "moveToComplete", sender: toDo)
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -101,5 +119,6 @@ class TableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+
 
 }
